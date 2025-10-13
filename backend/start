@@ -1,0 +1,161 @@
+#!/bin/sh
+
+# Lab Backend Start Script
+# Usage: ./start -local [--offline]
+
+set -e
+
+LOCAL_MODE=false
+OFFLINE_MODE=false
+
+# Parse arguments
+for arg in "$@"; do
+    case $arg in
+        -local)
+            LOCAL_MODE=true
+            shift
+            ;;
+        --offline)
+            OFFLINE_MODE=true
+            shift
+            ;;
+        *)
+            echo "Unknown option: $arg"
+            echo "Usage: $0 [-local] [--offline]"
+            exit 1
+            ;;
+    esac
+done
+
+echo "🚀 Starting Lab Backend Setup..."
+
+# Step 1: Create virtual environment if missing
+if [ ! -d ".venv" ]; then
+    echo "📦 Creating virtual environment..."
+    python3 -m venv .venv
+fi
+
+echo "🔧 Activating virtual environment..."
+. .venv/bin/activate
+
+# Step 2: Install dependencies
+echo "📥 Installing dependencies..."
+pip install -U pip
+pip install -e ".[dev]"
+
+# Step 3: Environment setup
+echo "🔐 Setting up environment..."
+
+# Create .env if missing
+if [ ! -f ".env" ]; then
+    echo "Creating .env file..."
+    echo "GEMINI_API_KEY=<YOUR_KEY_HERE>" > .env
+fi
+
+# Function to prompt for Gemini API key
+prompt_gemini_key() {
+    echo "🔑 Please enter your Gemini API key:"
+    read -r api_key
+    if [ -z "$api_key" ]; then
+        echo "❌ API key cannot be empty"
+        return 1
+    fi
+    # Update .env file
+    if grep -q "GEMINI_API_KEY=" .env; then
+        sed -i.bak "s/GEMINI_API_KEY=.*/GEMINI_API_KEY=$api_key/" .env
+    else
+        echo "GEMINI_API_KEY=$api_key" >> .env
+    fi
+    return 0
+}
+
+# Function to verify Gemini API key
+verify_gemini_key() {
+    echo "🔍 Verifying Gemini API key..."
+    if python -c "from app.insights.clients import ensure_live; ensure_live(); print('✅ Gemini API key is valid')" 2>/dev/null; then
+        return 0
+    else
+        echo "❌ Gemini API key verification failed"
+        return 1
+    fi
+}
+
+# Check and verify Gemini API key
+if [ "$OFFLINE_MODE" = false ]; then
+    # Read current API key
+    if [ -f ".env" ]; then
+        GEMINI_KEY=$(grep "GEMINI_API_KEY=" .env | cut -d'=' -f2- | tr -d '"' | tr -d "'")
+    else
+        GEMINI_KEY=""
+    fi
+    
+    # Check if key is missing or placeholder
+    if [ -z "$GEMINI_KEY" ] || [ "$GEMINI_KEY" = "<YOUR_KEY_HERE>" ]; then
+        echo "⚠️  Gemini API key not found or invalid"
+        if ! prompt_gemini_key; then
+            echo "❌ Failed to get valid API key"
+            exit 1
+        fi
+    fi
+    
+    # Verify the key
+    if ! verify_gemini_key; then
+        echo "⚠️  API key verification failed, prompting for new key..."
+        if ! prompt_gemini_key; then
+            echo "❌ Failed to get valid API key"
+            exit 1
+        fi
+        if ! verify_gemini_key; then
+            echo "❌ API key verification failed after retry. Please check your key and try again."
+            exit 1
+        fi
+    fi
+else
+    echo "🔌 Offline mode: Skipping Gemini verification"
+fi
+
+# Step 4: Set derived environment variables
+echo "⚙️  Setting up derived environment variables..."
+
+# Function to ensure env var exists
+ensure_env_var() {
+    local var_name="$1"
+    local default_value="$2"
+    
+    if ! grep -q "^$var_name=" .env; then
+        echo "$var_name=$default_value" >> .env
+        echo "Added $var_name=$default_value to .env"
+    fi
+}
+
+ensure_env_var "DATABASE_URL" "postgresql+psycopg://health:health@localhost:5432/health"
+ensure_env_var "REDIS_URL" "redis://localhost:6379/0"
+ensure_env_var "FILES_BUCKET_PATH" ".bucket"
+ensure_env_var "GEMINI_MODEL_VISION" "gemini-2.0-flash"
+ensure_env_var "GEMINI_MODEL_TEXT" "gemini-2.0-flash"
+
+# Step 5: Create .env.lock with current effective values
+echo "🔒 Creating .env.lock..."
+cat .env > .env.lock
+echo "# Generated on $(date)" >> .env.lock
+
+# Step 6: Start Docker services
+echo "🐳 Starting Docker services..."
+make up
+
+# Wait for services to be ready
+echo "⏳ Waiting for services to be ready..."
+sleep 5
+
+# Step 7: Run migrations
+echo "🗄️  Running database migrations..."
+alembic upgrade head
+
+# Step 8: Start development server if requested
+if [ "$LOCAL_MODE" = true ]; then
+    echo "🌐 Starting development server..."
+    echo "📖 Swagger UI will be available at: http://127.0.0.1:8000/docs"
+    make dev
+else
+    echo "✅ Setup complete! Run './start -local' to start the development server."
+fi

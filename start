@@ -1,0 +1,125 @@
+#!/bin/bash
+
+# Clarity Health - Full Stack Startup Script
+# Usage: ./start -local
+
+set -e
+
+echo "🚀 Starting Clarity Health - Full Stack Platform..."
+echo ""
+
+# Check if -local flag is provided
+if [ "$1" != "-local" ]; then
+    echo "Usage: ./start -local"
+    echo "This script starts both the backend and frontend for local development."
+    echo ""
+    echo "What this script does:"
+    echo "  1. Starts the FastAPI backend on http://127.0.0.1:8000"
+    echo "  2. Starts the React frontend on http://localhost:3000"
+    echo "  3. Sets up databases, dependencies, and all services"
+    echo ""
+    echo "Prerequisites:"
+    echo "  - Python 3.11+ and pip"
+    echo "  - Node.js 18+ and npm"
+    echo "  - Docker and Docker Compose"
+    echo "  - GEMINI_API_KEY environment variable"
+    exit 1
+fi
+
+# Function to check if a command exists
+command_exists() {
+    command -v "$1" >/dev/null 2>&1
+}
+
+# Check prerequisites
+echo "🔍 Checking prerequisites..."
+
+# Check Python
+if ! command_exists python3; then
+    echo "❌ Python 3 is not installed. Please install Python 3.11+ first."
+    exit 1
+fi
+
+# Check Node.js
+if ! command_exists node; then
+    echo "❌ Node.js is not installed. Please install Node.js 18+ first."
+    exit 1
+fi
+
+# Check Docker
+if ! command_exists docker; then
+    echo "❌ Docker is not installed. Please install Docker first."
+    exit 1
+fi
+
+# Check Docker Compose (try both old and new formats)
+if ! command_exists docker-compose && ! docker compose version >/dev/null 2>&1; then
+    echo "❌ Docker Compose is not installed. Please install Docker Compose first."
+    exit 1
+fi
+
+echo "✅ All prerequisites found"
+
+# Check if GEMINI_API_KEY is set
+if [ -z "$GEMINI_API_KEY" ]; then
+    echo "⚠️  GEMINI_API_KEY not found in environment"
+    echo "   The backend will prompt you for it when starting"
+fi
+
+echo ""
+echo "🌟 Starting Clarity Health Services..."
+echo ""
+
+# Function to cleanup background processes on exit
+cleanup() {
+    echo ""
+    echo "🛑 Shutting down Clarity Health services..."
+    # Kill background processes
+    jobs -p | xargs -r kill
+    exit 0
+}
+
+# Set up signal handlers
+trap cleanup SIGINT SIGTERM
+
+# Start backend in background
+echo "🔧 Starting Backend (FastAPI + PostgreSQL + Redis)..."
+cd backend
+./start -local &
+BACKEND_PID=$!
+cd ..
+
+# Wait a moment for backend to start
+sleep 3
+
+# Start frontend in background
+echo "🎨 Starting Frontend (React + Material-UI)..."
+cd frontend
+./start -local &
+FRONTEND_PID=$!
+cd ..
+
+echo ""
+echo "🎉 Clarity Health is starting up!"
+echo ""
+echo "📊 Services:"
+echo "   Backend API:    http://127.0.0.1:8000"
+echo "   API Docs:       http://127.0.0.1:8000/docs"
+echo "   Frontend:       http://localhost:3000"
+echo ""
+echo "🔍 Health Check:"
+echo "   Backend:        curl http://127.0.0.1:8000/docs"
+echo "   Frontend:       curl http://localhost:3000"
+echo ""
+echo "📱 Clarity Health Features:"
+echo "   • Health Dashboard with AI insights"
+echo "   • Lab Results Upload & Processing"
+echo "   • Wearable Device Sync (Apple Watch, Fitbit)"
+echo "   • 24/7 AI Health Chat Assistant"
+echo "   • Data Lake Architecture"
+echo ""
+echo "Press Ctrl+C to stop all services"
+echo ""
+
+# Wait for both processes
+wait $BACKEND_PID $FRONTEND_PID
