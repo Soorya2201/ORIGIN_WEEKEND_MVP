@@ -4,14 +4,14 @@ FastAPI backend for comprehensive health dashboard with AI-powered insights, wea
 
 ## Features
 
-### 🏥 **Health Dashboard**
+### **Health Dashboard**
 - **Health Assessments**: Sleep, hydration, vitamin, and caloric intake ratings (0-100 scale)
 - **Overall Health Score**: Weighted average of all health metrics
 - **Trend Analysis**: Track improvements and declines over time
 - **Recommendations**: AI-generated health suggestions
 - **Alerts**: Important health notifications
 
-### 📊 **Lab Results Processing**
+### **Lab Results Processing**
 - **Image/PDF Upload**: Accept lab result images and PDFs
 - **Gemini Multimodal Extraction**: Extract structured lab data using Google's Gemini AI
 - **PII Redaction**: Automatically de-identify personal information
@@ -24,13 +24,13 @@ FastAPI backend for comprehensive health dashboard with AI-powered insights, wea
 - **Garmin**: Comprehensive fitness and health metrics
 - **Auto-Sync**: Configurable sync frequency and data types
 
-### 🤖 **AI Health Chat**
+### **AI Health Chat**
 - **Context-Aware**: Uses your health data for personalized responses
 - **Memory System**: Maintains conversation history and context
 - **Health Integration**: Accesses lab results, wearable data, and assessments
 - **Recommendations**: Provides actionable health advice
 
-### 🗄️ **Data Lake Architecture**
+### **Data Lake Architecture**
 - **Flexible JSON Storage**: All health data stored as JSON in PostgreSQL
 - **Multi-Source Integration**: Lab results, wearables, manual entries
 - **Real-time Processing**: Data normalized and validated on ingestion
@@ -79,13 +79,13 @@ FastAPI backend for comprehensive health dashboard with AI-powered insights, wea
 
 ## API Endpoints
 
-### 🏥 **MVP Health Dashboard**
+### **MVP Health Dashboard**
 - `POST /mvp/users/` - Create user profile
 - `GET /mvp/users/{user_id}` - Get user profile
 - `PUT /mvp/users/{user_id}` - Update user profile
 - `GET /mvp/dashboard/{user_id}` - Get comprehensive dashboard data
 
-### 📊 **Health Assessments**
+### **Health Assessments**
 - `POST /mvp/health-assessments/` - Calculate new health assessment
 - `GET /mvp/health-assessments/{user_id}` - Get assessment history
 
@@ -95,23 +95,23 @@ FastAPI backend for comprehensive health dashboard with AI-powered insights, wea
 - `POST /mvp/wearables/sync` - Sync wearable data
 - `GET /mvp/wearables/{user_id}/sync-status` - Get sync status
 
-### 🤖 **AI Health Chat**
+### **AI Health Chat**
 - `POST /mvp/chat/message` - Send message to AI health assistant
 - `GET /mvp/chat/sessions/{user_id}` - Get chat sessions
 - `GET /mvp/chat/history/{session_id}` - Get chat history
 
-### 🗄️ **Data Lake**
+### **Data Lake**
 - `POST /mvp/data-lake/` - Store health data
 - `GET /mvp/data-lake/{user_id}` - Get health data
 
-### 🔧 **Legacy Lab Processing**
+### **Legacy Lab Processing**
 - `POST /upload` - Upload image/PDF files (max 10MB)
 - `POST /labs/ingest_from_media` - Extract labs from uploaded media
 - `GET /labs` - Retrieve lab results (latest per analyte)
 - `POST /insights/run` - Generate rule-based insights
 - `GET /insights` - Retrieve generated insights
 
-### 🛠️ **Admin & Health**
+### **Admin & Health**
 - `GET /admin/healthz` - Basic health check
 - `GET /admin/envcheck` - Environment variable verification
 - `GET /admin/gemini_check` - Gemini API connectivity check
@@ -190,43 +190,43 @@ make down   # Stop services
 
 ## MVP Status
 
-### ✅ **COMPLETE - All MVP Features Implemented**
+### Implemented in this MVP
 
-#### 🏥 **Health Dashboard**
-- ✅ User profile management
-- ✅ Health assessment engine (sleep, hydration, vitamins, calories)
-- ✅ Overall health scoring algorithm
-- ✅ Dashboard API with metrics and recommendations
+#### **Health Dashboard**
+- User profile management
+- Health assessment engine (sleep, hydration, vitamins, calories)
+- Overall health scoring algorithm
+- Dashboard API with metrics and recommendations
 
-#### 📊 **Lab Results Processing**
-- ✅ Image/PDF upload and processing
-- ✅ Gemini multimodal extraction
-- ✅ Data normalization and validation
-- ✅ PII redaction and de-identification
+#### **Lab Results Processing**
+- Image/PDF upload and processing
+- Gemini multimodal extraction
+- Data normalization and validation
+- PII redaction and de-identification
 
 #### ⌚ **Wearable Integration**
-- ✅ Apple Watch, Fitbit, Garmin support
-- ✅ Data sync and processing
-- ✅ Multi-device management
-- ✅ Real-time data aggregation
+- Apple Watch, Fitbit, Garmin adapters (sync is mocked in this MVP)
+- Data sync and processing
+- Multi-device management
+- Real-time data aggregation
 
-#### 🤖 **AI Health Chat**
-- ✅ Context-aware conversations
-- ✅ Health data integration
-- ✅ Memory and session management
-- ✅ Personalized recommendations
+#### **AI Health Chat**
+- Context-aware conversations
+- Health data integration
+- Memory and session management
+- Personalized recommendations
 
-#### 🗄️ **Data Lake Architecture**
-- ✅ JSON-based flexible storage
-- ✅ Multi-source data integration
-- ✅ Real-time processing pipeline
-- ✅ Searchable and taggable data
+#### **Data Lake Architecture**
+- JSON-based flexible storage
+- Multi-source data integration
+- Real-time processing pipeline
+- Searchable and taggable data
 
-#### 🧪 **Testing & Quality**
-- ✅ 24/24 comprehensive tests passing
-- ✅ Unit, integration, and API tests
-- ✅ Complete workflow validation
-- ✅ Production-ready code quality
+#### **Testing & Quality**
+- 24/24 comprehensive tests passing
+- Unit, integration, and API tests
+- Complete workflow validation
+- Production-ready code quality
 
 ## License
 

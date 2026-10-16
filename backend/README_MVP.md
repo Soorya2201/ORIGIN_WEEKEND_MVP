@@ -1,10 +1,10 @@
 # MVP Health Dashboard Backend
 
-## 🎯 Overview
+## Overview
 
 This MVP (Minimum Viable Product) backend provides a comprehensive health dashboard system with AI-powered insights, wearable device integration, and intelligent health assessments. The system uses a "data lake" approach to store and process health information from multiple sources.
 
-## 🏗️ Architecture
+## Architecture
 
 ### Data Lake Approach
 - **Flexible Storage**: All health data is stored as JSON in PostgreSQL for maximum flexibility
@@ -15,12 +15,12 @@ This MVP (Minimum Viable Product) backend provides a comprehensive health dashbo
 ### Core Components
 
 1. **Health Assessment Engine** - Calculates health scores and ratings
-2. **Wearable Sync Service** - Integrates with Apple Watch, Fitbit, Garmin
+2. **Wearable Sync Service** - Apple Watch, Fitbit and Garmin adapters (sync is mocked in this MVP)
 3. **Chat Service** - AI-powered health consultations with context
 4. **Data Processing Pipeline** - Normalizes and validates health data
 5. **API Layer** - RESTful endpoints for all functionality
 
-## 📊 Features
+## Features
 
 ### Dashboard
 - **Health Metrics**: Sleep, hydration, vitamin, and caloric intake scores (0-100)
@@ -46,7 +46,7 @@ This MVP (Minimum Viable Product) backend provides a comprehensive health dashbo
 - **Reference Ranges**: Determines normal/high/low status
 - **Confidence Scoring**: Rates data quality and reliability
 
-## 🗄️ Database Schema
+## Database Schema
 
 ### Core Tables
 
@@ -123,7 +123,7 @@ chat_messages
 └── tokens_used (Integer)
 ```
 
-## 🚀 API Endpoints
+## API Endpoints
 
 ### User Management
 - `POST /mvp/users/` - Create user profile
@@ -152,7 +152,7 @@ chat_messages
 - `POST /mvp/data-lake/` - Store health data
 - `GET /mvp/data-lake/{user_id}` - Get health data
 
-## 🔧 Health Assessment Engine
+## Health Assessment Engine
 
 ### Scoring Algorithm
 
@@ -185,7 +185,7 @@ chat_messages
 - **Weighted Average**: Sleep (30%) + Hydration (25%) + Vitamins (25%) + Calories (20%)
 - **Confidence Score**: Based on data quality and quantity
 
-## 🔄 Data Processing Pipeline
+## Data Processing Pipeline
 
 ### Lab Results Processing
 1. **Extract**: Parse lab data from various formats
@@ -210,7 +210,7 @@ chat_messages
 4. **Score**: Assign confidence based on entry type
 5. **Store**: Save to health data lake
 
-## 🤖 AI Chat System
+## AI Chat System
 
 ### Context Building
 - **User Profile**: Age, gender, height, weight
@@ -230,7 +230,7 @@ chat_messages
 - **Recommendations**: Extracts and stores actionable advice
 - **Follow-up**: Suggests relevant questions for continued conversation
 
-## 🧪 Testing
+## Testing
 
 ### Test Coverage
 - **Unit Tests**: Individual component testing
@@ -257,7 +257,7 @@ pytest tests/test_mvp.py::TestWearableSyncService -v
 pytest tests/test_mvp.py::TestChatService -v
 ```
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 - Python 3.11+
@@ -304,7 +304,7 @@ LOG_LEVEL=INFO
 5. **Get Assessment**: `POST /mvp/health-assessments/`
 6. **Chat with AI**: `POST /mvp/chat/message`
 
-## 📈 Usage Examples
+## Usage Examples
 
 ### Creating a User Profile
 ```python
@@ -362,7 +362,7 @@ print(f"Sleep Score: {dashboard['health_metrics']['sleep_score']}")
 print(f"Recommendations: {dashboard['recommendations']}")
 ```
 
-## 🔮 Future Enhancements
+## Future Enhancements
 
 ### Planned Features
 - **More Wearable Devices**: Samsung Galaxy Watch, Oura Ring, Whoop
@@ -380,7 +380,7 @@ print(f"Recommendations: {dashboard['recommendations']}")
 - **Security**: Enhanced authentication and authorization
 - **Scalability**: Horizontal scaling and load balancing
 
-## 🤝 Contributing
+## Contributing
 
 ### Development Setup
 1. Fork the repository
@@ -397,11 +397,11 @@ print(f"Recommendations: {dashboard['recommendations']}")
 - **Type Hints**: Use type annotations throughout
 - **Error Handling**: Comprehensive error handling and logging
 
-## 📄 License
+## License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
 
-## 🆘 Support
+## Support
 
 ### Documentation
 - **API Docs**: http://127.0.0.1:8000/docs (when running)
@@ -420,4 +420,4 @@ For questions or support, please open an issue in the repository or contact the 
 
 ---
 
-**Built with ❤️ for better health insights**
+**Built with for better health insights**

@@ -49,4 +49,4 @@ cd backend
 
 API docs are served at http://127.0.0.1:8000/docs. Tests: `make test` (or `make test-full` for the end-to-end run). `./test_workflow.sh` from the repo root uploads `sample_lab_results.png` end to end.
 
-> The React frontend described in `demo.md` is not included in this repository; this repo is the backend.
+> This repository contains the backend only.
