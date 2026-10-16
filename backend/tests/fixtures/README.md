@@ -46,9 +46,9 @@ python run_full_test.py
 ```
 
 The test will:
-1. ✅ Upload your lab image
-2. 🔍 Extract lab data using Gemini AI
-3. 🧠 Generate clinical insights using rules
-4. 📊 Store results in database
-5. 📝 Generate LLM summary
-6. 🎉 Verify the complete pipeline works
+1. Upload your lab image
+2. Extract lab data using Gemini AI
+3. Generate clinical insights using rules
+4. Store results in database
+5. Generate LLM summary
+6. Verify the complete pipeline works
